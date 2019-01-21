@@ -5,7 +5,7 @@ const {
 
 const row = () => new Array(8).fill(EMPTY_CELL, 0, 8)
 
-const Board = exports.Board = () => ({
+const Board = () => ({
   a: row(),
   b: row(),
   c: row(),
@@ -16,7 +16,7 @@ const Board = exports.Board = () => ({
   h: row()
 })
 
-exports.createBoard = (pieces) => {
+const createBoard = (pieces) => {
   const board = Board()
 
   pieces.forEach((piece) => {
@@ -27,7 +27,7 @@ exports.createBoard = (pieces) => {
   return board
 }
 
-const getPiece = exports.getPiece = (board, position) => {
+const getPiece = (board, position) => {
   const [ col, row ] = coordsFromPosition(position)
   const piece = board[col][row - 1]
 
@@ -38,7 +38,7 @@ const getPiece = exports.getPiece = (board, position) => {
   }
 }
 
-exports.movePiece = (board, piece, position) => {
+const movePiece = (board, piece, position) => {
   const p = getPiece(board, piece)
 
   if (p === false) {
@@ -55,12 +55,16 @@ exports.movePiece = (board, piece, position) => {
 
     let [ x, y ] = coordsFromPosition(position)
     board[x].splice(y - 1, 1, p)
-
-    p.position = position
   } else {
     console.log(`${piece}->${position} isn't a valid move!`)
     return false
   }
 
   return board
+}
+
+module.exports = {
+  createBoard,
+  getPiece,
+  movePiece
 }
