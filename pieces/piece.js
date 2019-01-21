@@ -18,11 +18,19 @@ module.exports = class Piece {
     return this.constructor.name.substr(0, 1)
   }
 
+  get fullName () {
+    return this.constructor
+  }
+
   toString () {
     return this.name + this.position
   }
 
   move (board, position) {
     throw new Error('Not implemented!')
+  }
+
+  clone () {
+    return new this.constructor(this.color, this.position)
   }
 }
