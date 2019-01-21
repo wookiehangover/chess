@@ -1,13 +1,14 @@
 const Piece = require('./piece')
 const { coordsFromPosition, ROWS } = require('../utils')
-const { getPiece } = require('../board')
+const { getPiece, walkDiagonal } = require('../board')
 
 class Bishop extends Piece {
   move (board, position) {
+    const nextCoords = coordsFromPosition(position)
     const [ currentCol, currentRow ] = this.coords
-    const [ nextCol, nextRow ] = coordsFromPosition(position)
-    const nextColIndex = ROWS.indexOf(nextCol.toUpperCase())
-    const currentColIndex = ROWS.indexOf(currentCol.toUpperCase())
+    const [ nextCol, nextRow ] = nextCoords
+    const nextColIndex = ROWS.indexOf(nextCol)
+    const currentColIndex = ROWS.indexOf(currentCol)
     let isValid = false
 
     // console.log('===> Move:', this.position, position)
@@ -19,28 +20,12 @@ class Bishop extends Piece {
 
     // if the move may be legal, check that the path is unobstructed
     if (isValid) {
-      // Extra the delta and direction for the move
-      const rowDirection = nextRow > currentRow ? 1 : -1
-      const rowDelta = nextRow > currentRow
-        ? nextRow - currentRow : currentRow - nextRow
-      const colDirection = nextColIndex > currentColIndex ? 1 : -1
-      const colDelta = nextColIndex > currentColIndex
-        ? nextColIndex - currentColIndex : currentColIndex - nextColIndex
-
       // loop through the coords to walk from (current) => (next)
-      for (let i = 1, j = 1; i < rowDelta && j < colDelta; i++, j++) {
-        const col = currentRow + (rowDirection * i)
-        const row = ROWS[currentColIndex + (colDirection * j)].toLowerCase()
-        const piece = getPiece(board, row + col)
-        // console.log(`checking ${row}${col}...`, piece)
-        if (piece !== false) {
-          isValid = false
-        }
-      }
+      isValid = walkDiagonal(board, this.coords, nextCoords)
 
       // And if the final position is a capture, it's valid
       const piece = getPiece(board, position)
-      if (piece !== false) {
+      if (piece !== false && isValid) {
         if (piece.color === this.color) {
           isValid = false
         } else {
