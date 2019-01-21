@@ -1,30 +1,36 @@
 const {
   coordsFromPosition,
-  EMPTY_CELL
+  getVectors,
+  EMPTY_CELL,
+  ROWS
 } = require('./utils')
 
-const row = () => new Array(8).fill(EMPTY_CELL, 0, 8)
+class Board {
+  constructor (pieces = []) {
+    ROWS.forEach(col => {
+      this[col] = new Array(8).fill(EMPTY_CELL, 0, 8)
+    })
 
-const Board = () => ({
-  a: row(),
-  b: row(),
-  c: row(),
-  d: row(),
-  e: row(),
-  f: row(),
-  g: row(),
-  h: row()
-})
+    pieces.forEach((piece) => {
+      const [ col, row ] = piece.coords
+      this[col].splice(row - 1, 1, piece)
+    })
+  }
+
+  get pieces () {
+    return ROWS.map(r => this[r]).reduce((result, r) => {
+      result.push.apply(result, r.filter(cell => cell !== EMPTY_CELL))
+      return result
+    }, [])
+  }
+
+  getPiece (position) {
+    return getPiece(this, position)
+  }
+}
 
 const createBoard = (pieces) => {
-  const board = Board()
-
-  pieces.forEach((piece) => {
-    const [ col, row ] = piece.coords
-    board[col].splice(row - 1, 1, piece)
-  })
-
-  return board
+  return new Board(pieces)
 }
 
 const getPiece = (board, position) => {
@@ -63,8 +69,65 @@ const movePiece = (board, piece, position) => {
   return board
 }
 
+const walk = (board, [ currentCol, currentRow ], [ nextCol, nextRow ]) => {
+  let isValid = true
+  // Determine the delta and direction for the move
+  const [
+    [ rowDirection, rowDelta ],
+    [ colDirection, colDelta ]
+  ] = getVectors([ currentCol, currentRow ], [ nextCol, nextRow ])
+
+  // loop through the coords to walk from (current) => (next)
+  const spaces = colDelta + rowDelta
+  const currentColIndex = ROWS.indexOf(currentCol)
+  for (let i = 1; i < spaces; i++) {
+    // WARNING: clever code ahead!
+    // Math.min({col,row}Delta, 1) = 0, when the value hasn't changed, e.g. row + (i * 0) = row
+    const row = currentRow + (rowDirection * i * Math.min(rowDelta, 1))
+    const col = ROWS[currentColIndex + (colDirection * i * Math.min(colDelta, 1))]
+    const piece = getPiece(board, col + row)
+    // console.log(`checking ${col}${row}...`, piece)
+    if (piece) {
+      isValid = false
+      break
+    }
+  }
+
+  return isValid
+}
+
+const walkDiagonal = (board, [ currentCol, currentRow ], [ nextCol, nextRow ]) => {
+  let isValid = true
+  // Determine the delta and direction for the move
+  const [
+    [ rowDirection, rowDelta ],
+    [ colDirection, colDelta ]
+  ] = getVectors([ currentCol, currentRow ], [ nextCol, nextRow ])
+
+  // loop through the coords to walk from (current) => (next)
+  if (colDelta > 0 && rowDelta > 0) {
+    // when both row and column values have changed, walk by incrementing x and y simultaneously
+    const currentColIndex = ROWS.indexOf(currentCol)
+    for (let x = 1, y = 1; x < rowDelta && y < colDelta; x++, y++) {
+      const row = currentRow + (rowDirection * x)
+      const col = ROWS[currentColIndex + (colDirection * y)]
+      const piece = getPiece(board, col + row)
+      // console.log(`checking ${row}${col}...`, piece)
+      if (piece) {
+        isValid = false
+        break
+      }
+    }
+  }
+
+  return isValid
+}
+
 module.exports = {
   createBoard,
   getPiece,
-  movePiece
+  getVectors,
+  movePiece,
+  walk,
+  walkDiagonal
 }
