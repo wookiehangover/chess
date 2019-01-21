@@ -33,18 +33,18 @@ class Queen extends Piece {
         ? nextColIndex - currentColIndex : currentColIndex - nextColIndex
 
       // loop through the coords to walk from (current) => (next)
-      for (let i = 1; i < rowDelta; i++) {
-        if (colDelta > 0) {
-          for (let j = 1; j < colDelta; j++) {
-            const col = currentRow + (rowDirection * i)
-            const row = ROWS[currentColIndex + (colDirection * j)].toLowerCase()
-            const piece = getPiece(board, row + col)
-            // console.log(`checking ${row}${col}...`, piece)
-            if (piece !== false) {
-              isValid = false
-            }
+      if (colDelta > 0) {
+        for (let i = 1, j = 1; i < rowDelta && j < colDelta; i++, j++) {
+          const col = currentRow + (rowDirection * i)
+          const row = ROWS[currentColIndex + (colDirection * j)].toLowerCase()
+          const piece = getPiece(board, row + col)
+          // console.log(`checking ${row}${col}...`, piece)
+          if (piece !== false) {
+            isValid = false
           }
-        } else {
+        }
+      } else {
+        for (let i = 1; i < rowDelta; i++ ) {
           const col = currentRow + (rowDirection * i)
           const row = ROWS[currentColIndex].toLowerCase()
           const piece = getPiece(board, row + col)
