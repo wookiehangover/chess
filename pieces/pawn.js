@@ -19,8 +19,8 @@ class Pawn extends Piece {
     // if the new space is occupied, it must be +/- one col and +1 row
     if (isOccupied) {
       // console.log('Taking Move:', this.position, position)
-      const nextColIndex = ROWS.indexOf(nextCol.toUpperCase())
-      const currentColIndex = ROWS.indexOf(currentCol.toUpperCase())
+      const nextColIndex = ROWS.indexOf(nextCol)
+      const currentColIndex = ROWS.indexOf(currentCol)
 
       // Pawns can only take pieces diagonally, 1 space in either direction
       const validCol = nextColIndex === currentColIndex - 1 || nextColIndex === currentColIndex + 1
