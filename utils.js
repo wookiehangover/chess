@@ -15,7 +15,28 @@ const getRow = (board, row) => {
   ]
 }
 
-const ROWS = exports.ROWS = 'ABCDEFGH'.split('')
+const ROWS = exports.ROWS = 'abcdefgh'.split('')
+const COLS = '87654321'.split('')
+
+const direction = (x, y) => x > y ? 1 : -1
+
+const size = (x, y) => x > y ? x - y : y - x
+
+exports.getVectors = ([ currentCol, currentRow ], [ nextCol, nextRow ]) => {
+  const nextColIndex = ROWS.indexOf(nextCol)
+  const currentColIndex = ROWS.indexOf(currentCol)
+
+  const row = [
+    direction(nextRow, currentRow),
+    size(nextRow, currentRow)
+  ]
+  const col = [
+    direction(nextColIndex, currentColIndex),
+    size(nextColIndex, currentColIndex)
+  ]
+
+  return [ row, col ]
+}
 
 const printPiece = (piece) => {
   if (piece.color === 'white') {
@@ -25,20 +46,32 @@ const printPiece = (piece) => {
   }
 }
 
-exports.printBoard = (b) => {
-  if (b === false) {
+const printPieces = (board) => {
+  const pieces = board.pieces.reduce((result, p) => {
+    result[p.color].push(p.toChar())
+    return result
+  }, { black: [], white: [] })
+
+  const black = pieces.black.sort().join(' ')
+  const white = pieces.white.sort().join(' ')
+
+  console.log('w: ' + chalk.cyan(white))
+  console.log('b: ' + chalk.green(black))
+}
+
+const printRow = (board, i) => {
+  const row = getRow(board, i).map(printPiece).join(' ')
+  console.log(`${i}: ${row}`)
+}
+
+exports.printBoard = (board) => {
+  if (board === false) {
     console.log('Invalid Board!')
     return
   }
   console.log('')
-  console.log(`8: ${getRow(b, 8).map(printPiece).join(' ')}`)
-  console.log(`7: ${getRow(b, 7).map(printPiece).join(' ')}`)
-  console.log(`6: ${getRow(b, 6).map(printPiece).join(' ')}`)
-  console.log(`5: ${getRow(b, 5).map(printPiece).join(' ')}`)
-  console.log(`4: ${getRow(b, 4).map(printPiece).join(' ')}`)
-  console.log(`3: ${getRow(b, 3).map(printPiece).join(' ')}`)
-  console.log(`2: ${getRow(b, 2).map(printPiece).join(' ')}`)
-  console.log(`1: ${getRow(b, 1).map(printPiece).join(' ')}`)
-  console.log(`   ${ROWS.join('   ')}`)
+  COLS.forEach(col => printRow(board, col))
+  console.log(`   ${ROWS.join('   ')}\n`)
+  printPieces(board)
   console.log('')
 }
