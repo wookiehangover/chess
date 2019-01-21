@@ -39,6 +39,14 @@ class Game {
     }
   }
 
+  update (piece, position) {
+    this.history.push([
+      this.pieces.map(p => p.clone()),
+      piece,
+      position
+    ])
+  }
+
   move (piece, position) {
     const p = getPiece(this.board, piece)
     let board = movePiece(this.board, piece, position)
@@ -52,7 +60,7 @@ class Game {
     }
 
     if (board !== false) {
-      this.history.push([ p.clone(), position ])
+      this.update(piece, position)
       p.position = position
     }
 
