@@ -19,7 +19,17 @@ module.exports = class Piece {
   }
 
   get fullName () {
-    return this.constructor
+    return this.constructor.name
+  }
+
+  validMoves (board) {
+    const moves = []
+    board.forEach((position) => {
+      if (this.move(board, position)) {
+        moves.push(position)
+      }
+    })
+    return moves
   }
 
   toString () {
