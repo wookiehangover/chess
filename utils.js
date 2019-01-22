@@ -16,7 +16,7 @@ const getRow = (board, row) => {
 }
 
 const ROWS = exports.ROWS = 'abcdefgh'.split('')
-const COLS = '87654321'.split('')
+const COLS = exports.COLS = '87654321'.split('')
 
 const direction = (x, y) => x > y ? 1 : -1
 
