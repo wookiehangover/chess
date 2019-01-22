@@ -1,6 +1,10 @@
 const Piece = require('./piece')
 
 class King extends Piece {
+  move (board, position) {
+    return false
+  }
+
   toChar () {
     return this.color === 'white' ? '\u2654' : '\u265a'
   }
