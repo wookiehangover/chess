@@ -2,6 +2,7 @@ const {
   coordsFromPosition,
   getVectors,
   EMPTY_CELL,
+  COLS,
   ROWS
 } = require('./utils')
 
@@ -22,6 +23,14 @@ class Board {
       result.push.apply(result, r.filter(cell => cell !== EMPTY_CELL))
       return result
     }, [])
+  }
+
+  forEach (callback) {
+    ROWS.forEach(row => {
+      COLS.forEach(col => {
+        callback.call(this, row + col)
+      })
+    })
   }
 
   getPiece (position) {
