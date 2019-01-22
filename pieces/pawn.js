@@ -1,11 +1,11 @@
 const Piece = require('./piece')
 const { coordsFromPosition, EMPTY_CELL, ROWS } = require('../utils')
-const { getPiece } = require('../board')
 
 class Pawn extends Piece {
   move (board, position) {
+    const nextCoords = coordsFromPosition(position)
     const [ currentCol, currentRow ] = this.coords
-    const [ nextCol, nextRow ] = coordsFromPosition(position)
+    const [ nextCol, nextRow ] = nextCoords
     const isOccupied = board[nextCol][nextRow - 1] !== EMPTY_CELL
     let isValid = false
 
@@ -26,7 +26,6 @@ class Pawn extends Piece {
       const validCol = nextColIndex === currentColIndex - 1 || nextColIndex === currentColIndex + 1
 
       if (validRow && validCol) {
-        this.capture(getPiece(board, position))
         isValid = true
       }
     } else {
@@ -42,16 +41,23 @@ class Pawn extends Piece {
       const validOpener = (maxRow + range) === nextRow && validCol
 
       // white can move 2 spaces if they are in row 2
-      if (this.color === 'white' && validOpener && currentRow === 2
-      ) {
+      if (this.color === 'white' && validOpener && currentRow === 2) {
         isValid = true
       }
 
       // black can move 2 spaces if they are in row 7
-      if (this.color === 'black' && validOpener && currentRow === 7
-      ) {
+      if (this.color === 'black' && validOpener && currentRow === 7) {
         isValid = true
       }
+
+      if (isValid) {
+        isValid = board.walk(this.coords, nextCoords)
+      }
+    }
+
+    const piece = board.getPiece(position)
+    if (piece !== false && isValid) {
+      this.capture(piece)
     }
 
     return isValid
