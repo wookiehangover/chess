@@ -1,6 +1,5 @@
 const Piece = require('./piece')
 const { coordsFromPosition } = require('../utils')
-const { getPiece, walk } = require('../board')
 
 class Rook extends Piece {
   move (board, position) {
@@ -18,10 +17,10 @@ class Rook extends Piece {
 
     // if the move may be legal, check that the path is unobstructed
     if (isValid) {
-      isValid = walk(board, this.coords, nextCoords)
+      isValid = board.walk(this.coords, nextCoords)
 
       // And if the final position is a capture, it's valid
-      const piece = getPiece(board, position)
+      const piece = board.getPiece(position)
       if (piece !== false && isValid) {
         if (piece.color === this.color) {
           isValid = false

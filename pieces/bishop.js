@@ -1,6 +1,5 @@
 const Piece = require('./piece')
 const { coordsFromPosition, ROWS } = require('../utils')
-const { getPiece, walkDiagonal } = require('../board')
 
 class Bishop extends Piece {
   move (board, position) {
@@ -11,7 +10,7 @@ class Bishop extends Piece {
     const currentColIndex = ROWS.indexOf(currentCol)
     let isValid = false
 
-    // console.log('===> Move:', this.position, position)
+    // console.log('===> Move:', this.position, position); debugger
 
     // A bishop can move diagonally in any direction, any number of spaces
     if (Math.abs(nextColIndex - currentColIndex) === Math.abs(nextRow - currentRow)) {
@@ -21,10 +20,10 @@ class Bishop extends Piece {
     // if the move may be legal, check that the path is unobstructed
     if (isValid) {
       // loop through the coords to walk from (current) => (next)
-      isValid = walkDiagonal(board, this.coords, nextCoords)
+      isValid = board.walkDiagonal(this.coords, nextCoords)
 
       // And if the final position is a capture, it's valid
-      const piece = getPiece(board, position)
+      const piece = board.getPiece(position)
       if (piece !== false && isValid) {
         if (piece.color === this.color) {
           isValid = false

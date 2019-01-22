@@ -27,6 +27,14 @@ class Board {
   getPiece (position) {
     return getPiece(this, position)
   }
+
+  walk (p1, p2) {
+    return walk(this, p1, p2)
+  }
+
+  walkDiagonal (p1, p2) {
+    return walkDiagonal(this, p1, p2)
+  }
 }
 
 const createBoard = (pieces) => {
