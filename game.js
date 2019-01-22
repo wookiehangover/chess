@@ -35,7 +35,7 @@ class Game {
     if (this.history.length === 0) {
       return 'white'
     } else {
-      return this.lastMove.color === 'white' ? 'black' : 'white'
+      return this.board.getPiece(this.lastMove[2]).color === 'white' ? 'black' : 'white'
     }
   }
 
