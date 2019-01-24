@@ -1,8 +1,35 @@
 import Piece from './piece'
+import { coordsFromPosition, getVectors } from '../utils'
+
+const absProduct = (v) => Math.abs(v[0] * v[1])
 
 class King extends Piece {
   move (board, position) {
-    return false
+    const nextCoords = coordsFromPosition(position)
+    let isValid = false
+
+    // console.log('===> Move:', this.position, position); debugger
+
+    // kings can move 1 space in any direction
+    const [ rowVector, colVector ] = getVectors(this.coords, nextCoords)
+    const col = absProduct(colVector)
+    const row = absProduct(rowVector)
+
+    if (row <= 1 && col <= 1) {
+      isValid = true
+    }
+
+    const piece = board.getPiece(position)
+    if (piece !== false && isValid) {
+      if (piece.color === this.color) {
+        isValid = false
+      } else {
+        isValid = true
+        this.capture(piece)
+      }
+    }
+
+    return isValid
   }
 
   toChar () {

@@ -177,7 +177,7 @@ const walk = (board, [ currentCol, currentRow ], [ nextCol, nextRow ]) => {
   const currentColIndex = ROWS.indexOf(currentCol);
   for (let i = 1; i < spaces; i++) {
     // WARNING: clever code ahead!
-    // Math.min({col,row}Delta, 1) = 0, when the value hasn't changed, e.g. row + (i * 0) = row
+    // Math.min({col,row}Delta, 1) will equal 0 when the value hasn't changed, e.g. row + (i * 0) = row
     const row = currentRow + (rowDirection * i * Math.min(rowDelta, 1));
     const col = ROWS[currentColIndex + (colDirection * i * Math.min(colDelta, 1))];
     const piece = getPiece(board, col + row);
@@ -1021,9 +1021,35 @@ var Queen$1 = /*#__PURE__*/Object.freeze({
   bQ: bQ
 });
 
+const absProduct$1 = (v) => Math.abs(v[0] * v[1]);
+
 class King extends Piece {
   move (board, position) {
-    return false
+    const nextCoords = coordsFromPosition(position);
+    let isValid = false;
+
+    // console.log('===> Move:', this.position, position); debugger
+
+    // kings can move 1 space in any direction
+    const [ rowVector, colVector ] = getVectors(this.coords, nextCoords);
+    const col = absProduct$1(colVector);
+    const row = absProduct$1(rowVector);
+
+    if (row <= 1 && col <= 1) {
+      isValid = true;
+    }
+
+    const piece = board.getPiece(position);
+    if (piece !== false && isValid) {
+      if (piece.color === this.color) {
+        isValid = false;
+      } else {
+        isValid = true;
+        this.capture(piece);
+      }
+    }
+
+    return isValid
   }
 
   toChar () {

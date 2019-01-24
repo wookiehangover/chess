@@ -106,7 +106,7 @@ const walk = (board, [ currentCol, currentRow ], [ nextCol, nextRow ]) => {
   const currentColIndex = ROWS.indexOf(currentCol)
   for (let i = 1; i < spaces; i++) {
     // WARNING: clever code ahead!
-    // Math.min({col,row}Delta, 1) = 0, when the value hasn't changed, e.g. row + (i * 0) = row
+    // Math.min({col,row}Delta, 1) will equal 0 when the value hasn't changed, e.g. row + (i * 0) = row
     const row = currentRow + (rowDirection * i * Math.min(rowDelta, 1))
     const col = ROWS[currentColIndex + (colDirection * i * Math.min(colDelta, 1))]
     const piece = getPiece(board, col + row)
