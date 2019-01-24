@@ -1,10 +1,10 @@
-const {
+import {
   coordsFromPosition,
   getVectors,
   EMPTY_CELL,
   COLS,
   ROWS
-} = require('./utils')
+} from './utils'
 
 class Board {
   constructor (pieces = []) {
@@ -25,12 +25,25 @@ class Board {
     }, [])
   }
 
+  write (coords, value) {
+    const [ col, row ] = coords
+    this[col].splice(row - 1, 1, value)
+  }
+
   forEach (callback) {
     ROWS.forEach(row => {
       COLS.forEach(col => {
-        callback.call(this, row + col)
+        callback.call(this, row + col, this.getPiece(row + col))
       })
     })
+  }
+
+  map (callback) {
+    const result = []
+    this.forEach((position, piece) => {
+      result.push(callback(position, piece))
+    })
+    return result
   }
 
   getPiece (position) {
@@ -72,12 +85,6 @@ const movePiece = (board, piece, position) => {
 
   if (move === true) {
     console.log(`${p.color}: ${piece} -> ${position}`)
-
-    let [ col, row ] = p.coords
-    board[col].splice(row - 1, 1, EMPTY_CELL)
-
-    let [ x, y ] = coordsFromPosition(position)
-    board[x].splice(y - 1, 1, p)
   } else {
     console.log(`${piece}->${position} isn't a valid move!`)
     return false
@@ -140,7 +147,7 @@ const walkDiagonal = (board, [ currentCol, currentRow ], [ nextCol, nextRow ]) =
   return isValid
 }
 
-module.exports = {
+export {
   createBoard,
   getPiece,
   getVectors,

@@ -1,0 +1,94 @@
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chess</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+  <script type="module">
+    import { game } from './dist/bundle.mjs'
+
+    const grid = '87654321'.split('').map((col) => 'abcdefgh'.split('').map((row) => `${row}${col}`))
+       .reduce((result, row) => {
+          result.push.apply(result, row)
+          return result
+        }, [])
+
+    const makeBoard = (b) => grid.map((position) => b.getPiece(position))
+
+    const app = new Vue({
+      el: '#board',
+      data: {
+        board: makeBoard(game.board)
+      }
+    })
+
+    window.app = app
+    window.game = game
+
+    game.on('move', () => {
+      app.board = makeBoard(game.board)
+    })
+
+  </script>
+</head>
+
+<body>
+  <style>
+    :root {
+      --cell-size: 4rem;
+      --font-size: 3rem;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size);
+      grid-gap: 0.5rem;
+      padding: 0.5rem;
+    }
+
+    .cell {
+      width: var(--cell-size);
+      height: var(--cell-size);
+      border: 1px solid black;
+      background: paleturquoise;
+      text-align: center;
+    }
+
+    .cell a {
+      font-size: var(--font-size);
+    }
+
+    .cell:nth-of-type(16n + 2),
+    .cell:nth-of-type(16n + 4),
+    .cell:nth-of-type(16n + 6),
+    .cell:nth-of-type(16n + 9),
+    .cell:nth-of-type(16n + 11),
+    .cell:nth-of-type(16n + 13),
+    .cell:nth-of-type(16n + 15),
+    .cell:nth-of-type(16n - 8) {
+      background: white;
+    }
+
+    @media screen and (min-width: 375px) {
+      .wrapper {
+        padding: 1rem;
+      }
+    }
+  </style>
+  <div class="wrapper">
+    <div id="board">
+      <div v-for="piece in board" class="cell">
+        <a :name="piece.position" v-if="piece">{{piece.toChar()}}</a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,5 +1,5 @@
-const Piece = require('./piece')
-const { coordsFromPosition, getVectors } = require('../utils')
+import Piece from './piece'
+import { coordsFromPosition, getVectors } from '../utils'
 
 const absProduct = (v) => Math.abs(v[0] * v[1])
 
@@ -42,8 +42,11 @@ class Night extends Piece {
   }
 }
 
-module.exports = {
+const wN = (...a) => new Night('white', ...a)
+const bN = (...a) => new Night('black', ...a)
+
+export {
   Night,
-  wN: (...a) => new Night('white', ...a),
-  bN: (...a) => new Night('black', ...a)
+  wN,
+  bN
 }

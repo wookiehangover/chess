@@ -1,5 +1,5 @@
-const Piece = require('./piece')
-const { coordsFromPosition, getVectors, ROWS } = require('../utils')
+import Piece from './piece'
+import { coordsFromPosition, getVectors, ROWS } from '../utils'
 
 class Queen extends Piece {
   move (board, position) {
@@ -56,8 +56,11 @@ class Queen extends Piece {
   }
 }
 
-module.exports = {
+const wQ = (...a) => new Queen('white', ...a)
+const bQ = (...a) => new Queen('black', ...a)
+
+export {
   Queen,
-  wQ: (...a) => new Queen('white', ...a),
-  bQ: (...a) => new Queen('black', ...a)
+  wQ,
+  bQ
 }

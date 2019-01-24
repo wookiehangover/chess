@@ -1,6 +1,8 @@
-const { printBoard } = require('./utils')
-const { createBoard, movePiece, getPiece } = require('./board')
+import { coordsFromPosition, printBoard, EMPTY_CELL } from './utils'
+import { createBoard, movePiece, getPiece } from './board'
+import { EventEmitter } from 'events'
 
+import pieces from './pieces'
 const {
   wP, bP,
   wR, bR,
@@ -8,7 +10,7 @@ const {
   wB, bB,
   wQ, bQ,
   wK, bK
-} = require('./pieces')
+} = pieces
 
 // Let's Play
 
@@ -19,11 +21,13 @@ const defaultPieces = [
   wR('a1'), wN('b1'), wB('c1'), wQ('d1'), wK('e1'), wB('f1'), wN('g1'), wR('h1')
 ]
 
-class Game {
+export default class Game extends EventEmitter {
   constructor (pieces = defaultPieces) {
+    super()
     this.history = []
     this.pieces = pieces
     this.board = createBoard(pieces)
+    this.on('move', printBoard)
     printBoard(this.board)
   }
 
@@ -51,22 +55,23 @@ class Game {
     const p = getPiece(this.board, piece)
     let board = movePiece(this.board, piece, position)
 
-    if (this.history.length > 1) {
-      const [ lastPiece ] = this.lastMove
-      if (lastPiece.color === p.color) {
-        board = false
-        console.log(`Slow down there. It's not ${lastPiece.color}'s turn yet.`)
-      }
+    if (p.color !== this.nextMove) {
+      board = false
+      console.log(`Slow down there. It's ${this.nextMove}'s turn.`)
     }
 
     if (board !== false) {
+      // Add this move to history, taking a snapshot of the board prior to moving anything
       this.update(piece, position)
+      // Replace the piece with an empty cell
+      board.write(p.coords, EMPTY_CELL)
+      // Move the piece to its new position
+      board.write(coordsFromPosition(position), p)
+      // Finally, make sure the piece knows its new position
       p.position = position
     }
 
-    printBoard(board)
+    this.emit('move', board)
     return this.board
   }
 }
-
-exports.Game = Game

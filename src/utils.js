@@ -1,11 +1,8 @@
-const chalk = require('chalk')
+// import chalk from 'chalk'
 
-exports.coordsFromPosition = (position) => {
-  const [ col, row ] = position.split('')
-  return [ col, parseInt(row, 10) ]
-}
-
-exports.EMPTY_CELL = '---'
+const EMPTY_CELL = '---'
+const ROWS = 'abcdefgh'.split('')
+const COLS = '87654321'.split('')
 
 const getRow = (board, row) => {
   const r = row - 1
@@ -15,14 +12,16 @@ const getRow = (board, row) => {
   ]
 }
 
-const ROWS = exports.ROWS = 'abcdefgh'.split('')
-const COLS = exports.COLS = '87654321'.split('')
+const coordsFromPosition = (position) => {
+  const [ col, row ] = position.split('')
+  return [ col, parseInt(row, 10) ]
+}
 
 const direction = (x, y) => x > y ? 1 : -1
 
 const size = (x, y) => x > y ? x - y : y - x
 
-exports.getVectors = ([ currentCol, currentRow ], [ nextCol, nextRow ]) => {
+const getVectors = ([ currentCol, currentRow ], [ nextCol, nextRow ]) => {
   const nextColIndex = ROWS.indexOf(nextCol)
   const currentColIndex = ROWS.indexOf(currentCol)
 
@@ -40,9 +39,11 @@ exports.getVectors = ([ currentCol, currentRow ], [ nextCol, nextRow ]) => {
 
 const printPiece = (piece) => {
   if (piece.color === 'white') {
-    return chalk.white.bold(piece)
+    return piece
+    // return chalk.white.bold(piece)
   } else {
-    return chalk.gray.bold(piece)
+    return piece
+    // return chalk.gray.bold(piece)
   }
 }
 
@@ -55,8 +56,8 @@ const printPieces = (board) => {
   const black = pieces.black.sort().join(' ')
   const white = pieces.white.sort().join(' ')
 
-  console.log('w: ' + chalk.cyan(white))
-  console.log('b: ' + chalk.green(black))
+  // console.log('w: ' + chalk.cyan(white))
+  // console.log('b: ' + chalk.green(black))
 }
 
 const printRow = (board, i) => {
@@ -64,7 +65,7 @@ const printRow = (board, i) => {
   console.log(`${i}: ${row}`)
 }
 
-exports.printBoard = (board) => {
+const printBoard = (board) => {
   if (board === false) {
     console.log('Invalid Board!')
     return
@@ -74,4 +75,13 @@ exports.printBoard = (board) => {
   console.log(`   ${ROWS.join('   ')}\n`)
   printPieces(board)
   console.log('')
+}
+
+export {
+  ROWS,
+  COLS,
+  EMPTY_CELL,
+  coordsFromPosition,
+  getVectors,
+  printBoard
 }

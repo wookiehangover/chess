@@ -1,4 +1,4 @@
-const { Game } = require('./game')
+import Game from './game'
 
 /*
 // Knight Test Case
@@ -24,6 +24,10 @@ game.move('b8', 'c6')
 game.move('g2', 'g3')
 game.move('d7', 'd5')
 game.move('e4', 'd5')
+game.move('d8', 'd5')
+game.move('b1', 'c3')
+game.move('d5', 'a5')
+game.move('f1', 'g2')
 
 const printMoves = (board, position) => {
   const piece = board.getPiece(position)

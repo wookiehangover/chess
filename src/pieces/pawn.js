@@ -1,5 +1,5 @@
-const Piece = require('./piece')
-const { coordsFromPosition, EMPTY_CELL, ROWS } = require('../utils')
+import Piece from './piece'
+import { coordsFromPosition, EMPTY_CELL, ROWS } from '../utils'
 
 class Pawn extends Piece {
   move (board, position) {
@@ -72,8 +72,11 @@ class Pawn extends Piece {
   }
 }
 
-module.exports = {
+const wP = (...a) => new Pawn('white', ...a)
+const bP = (...a) => new Pawn('black', ...a)
+
+export {
   Pawn,
-  wP: (...a) => new Pawn('white', ...a),
-  bP: (...a) => new Pawn('black', ...a)
+  wP,
+  bP
 }

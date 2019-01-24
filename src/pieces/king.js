@@ -1,4 +1,4 @@
-const Piece = require('./piece')
+import Piece from './piece'
 
 class King extends Piece {
   move (board, position) {
@@ -10,8 +10,11 @@ class King extends Piece {
   }
 }
 
-module.exports = {
+const wK = (...a) => new King('white', ...a)
+const bK = (...a) => new King('black', ...a)
+
+export {
   King,
-  wK: (...a) => new King('white', ...a),
-  bK: (...a) => new King('black', ...a)
+  wK,
+  bK
 }
