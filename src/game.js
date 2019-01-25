@@ -61,6 +61,7 @@ export default class Game extends EventEmitter {
     }
 
     if (board !== false) {
+      const captured = getPiece(this.board, position)
       // Add this move to history, taking a snapshot of the board prior to moving anything
       this.update(piece, position)
       // Replace the piece with an empty cell
@@ -69,9 +70,14 @@ export default class Game extends EventEmitter {
       board.write(coordsFromPosition(position), p)
       // Finally, make sure the piece knows its new position
       p.position = position
+      // Move event happens
+      this.emit('move', board)
+      // if a piece was captured, broadcast an event
+      if (captured) {
+        this.emit('capture', captured)
+      }
     }
 
-    this.emit('move', board)
     return this.board
   }
 }

@@ -120,21 +120,21 @@ const walk = (board, [ currentCol, currentRow ], [ nextCol, nextRow ]) => {
   return isValid
 }
 
-const walkDiagonal = (board, [ currentCol, currentRow ], [ nextCol, nextRow ]) => {
+const walkDiagonal = (board, [ y1, x1 ], [ y2, x2 ]) => {
   let isValid = true
   // Determine the delta and direction for the move
   const [
     [ rowDirection, rowDelta ],
     [ colDirection, colDelta ]
-  ] = getVectors([ currentCol, currentRow ], [ nextCol, nextRow ])
+  ] = getVectors([ y1, x1 ], [ y2, x2 ])
 
   // loop through the coords to walk from (current) => (next)
   if (colDelta > 0 && rowDelta > 0) {
     // when both row and column values have changed, walk by incrementing x and y simultaneously
-    const currentColIndex = ROWS.indexOf(currentCol)
-    for (let x = 1, y = 1; x < rowDelta && y < colDelta; x++, y++) {
-      const row = currentRow + (rowDirection * x)
-      const col = ROWS[currentColIndex + (colDirection * y)]
+    const currentColIndex = ROWS.indexOf(y1)
+    for (let i = 1, j = 1; i < rowDelta && j < colDelta; i++, j++) {
+      const row = x1 + (rowDirection * i)
+      const col = ROWS[currentColIndex + (colDirection * j)]
       const piece = getPiece(board, col + row)
       // console.log(`checking ${row}${col}...`, piece)
       if (piece) {
