@@ -130,7 +130,19 @@
       background: white;
     }
 
-    @media screen and (min-width: 375px) {
+    @media screen and (max-width: 400px) {
+      :root {
+        --cell-size: 2.2rem;
+        --font-size: 1.6rem;
+      }
+      .row-labels, .col-labels {
+        display: none;
+      }
+      .wrapper {
+        justify-content: center;
+      }
+    }
+    @media screen and (min-width: 400px) {
       .wrapper {
         padding: 1rem;
       }
