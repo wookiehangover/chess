@@ -1,54 +1,13 @@
 
+
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chess</title>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
-  <script type="module">
-    import { game } from './dist/bundle.mjs'
-
-    const grid = '87654321'.split('').map((col) => 'abcdefgh'.split('').map((row) => `${row}${col}`))
-       .reduce((result, row) => {
-          result.push.apply(result, row)
-          return result
-        }, [])
-
-    const makeBoard = (b) => grid.reduce((result, position) => {
-      result[position] = b.getPiece(position)
-      return result
-    }, {})
-
-    const app = new Vue({
-      el: '#board',
-      data: {
-        selected: null,
-        board: makeBoard(game.board)
-      },
-      methods: {
-        selectPiece(piece) {
-          if (this.selected) {
-            game.move(this.selected, piece)
-            this.selected = null
-          } else {
-            this.selected = piece
-          }
-        },
-        isSelected(position) {
-          return { selected: position === this.selected }
-        }
-      }
-    })
-
-    window.app = app
-    window.game = game
-
-    game.on('move', () => {
-      app.board = makeBoard(game.board)
-    })
-
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+  <script type="module" src="./dist/bundle.mjs"></script>
 </head>
 
 <body>
@@ -56,6 +15,7 @@
     :root {
       --cell-size: 4rem;
       --font-size: 3rem;
+      --columns: var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size);
     }
 
     body {
@@ -84,7 +44,7 @@
 
     .col-labels {
       display: grid;
-      grid-template-columns: var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size);
+      grid-template-columns: var(--columns);
       grid-gap: 0.5rem;
       padding: 0.5rem;
       margin-left: calc(var(--cell-size) + 1rem);
@@ -98,7 +58,7 @@
 
     #board {
       display: grid;
-      grid-template-columns: var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size) var(--cell-size);
+      grid-template-columns: var(--columns);
       grid-gap: 0.5rem;
       padding: 0.5rem;
     }
@@ -130,9 +90,13 @@
       background: white;
     }
 
+    .cell.valid {
+      background: bisque;
+    }
+
     @media screen and (max-width: 420px) {
       :root {
-        --cell-size: 2.2rem;
+        --cell-size: 2.2rem
         --font-size: 1.6rem;
       }
       .row-labels, .col-labels {
@@ -160,7 +124,7 @@
       <h2>1</h2>
     </div>
     <div id="board">
-      <div v-for="(piece, position) in board" class="cell" :class="position" v-on:click="selectPiece(position)">
+      <div v-for="(piece, position) in board" class="cell" v-bind:class="isValid(position)" v-on:click="selectPiece(position)">
         <a :name="piece.position" v-if="piece" v-bind:class="isSelected(position)">{{piece.toChar()}}</a>
       </div>
     </div>
