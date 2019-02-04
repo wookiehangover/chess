@@ -47,18 +47,18 @@ const printPiece = (piece) => {
   }
 }
 
-const printPieces = (board) => {
-  const pieces = board.pieces.reduce((result, p) => {
-    result[p.color].push(p.toChar())
-    return result
-  }, { black: [], white: [] })
+// const printPieces = (board) => {
+//   const pieces = board.pieces.reduce((result, p) => {
+//     result[p.color].push(p.toChar())
+//     return result
+//   }, { black: [], white: [] })
 
-  const black = pieces.black.sort().join(' ')
-  const white = pieces.white.sort().join(' ')
+//   const black = pieces.black.sort().join(' ')
+//   const white = pieces.white.sort().join(' ')
 
-  // console.log('w: ' + chalk.cyan(white))
-  // console.log('b: ' + chalk.green(black))
-}
+//   console.log('w: ' + chalk.cyan(white))
+//   console.log('b: ' + chalk.green(black))
+// }
 
 const printRow = (board, i) => {
   const row = getRow(board, i).map(printPiece).join(' ')
@@ -73,7 +73,7 @@ const printBoard = (board) => {
   console.log('')
   COLS.forEach(col => printRow(board, col))
   console.log(`   ${ROWS.join('   ')}\n`)
-  printPieces(board)
+  // printPieces(board)
   console.log('')
 }
 

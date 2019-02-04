@@ -2,6 +2,7 @@
   "name": "chess-ws-disconnect",
   "dependencies": {
     "@architect/data": "^2.0.13",
-    "@architect/functions": "^1.12.1"
+    "@architect/functions": "^1.13.7",
+    "aws-sdk": "^2.395.0"
   }
 }
